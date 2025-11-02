@@ -3,9 +3,54 @@ from varasto import Varasto
 
 
 class TestVarasto(unittest.TestCase):
+    #luomiseen perustuvat testit
+    def test_negatiivinen_tilavuus(self):
+        var = Varasto(-1)
+        self.assertEqual(var.tilavuus, 0)
+
+    def test_saldo_negatiivinen(self):
+        var = Varasto(10, -2)
+        self.assertEqual(var.saldo, 0)
+
+    def test_saldo_ylitilavuuden(self):
+        var = Varasto(3, 10)
+        self.assertEqual(var.saldo, var.tilavuus)
+    #lisaamiseen perustuvat testit
+    def test_negatiivisen_lisaaminen(self):
+        var = Varasto(10,5)
+        var.lisaa_varastoon(-1)
+        self.assertEqual(var.saldo, 5)
+
+    def test_liika_lisaaminen(self):
+        var = Varasto(10,0)
+        var.lisaa_varastoon(11)
+        self.assertEqual(var.saldo, var.tilavuus)
+
+    #Ottamiseen perustuvat testit
+    def test_liika_ottaminen(self):
+        var = Varasto(10,5)
+        otto = var.ota_varastosta(7)
+        self.assertEqual(otto, 5)
+        self.assertEqual(var.saldo, 0)
+
+    def test_negatiivinen_ottaminen(self):
+        var = Varasto(10, 3)
+        otto = var.ota_varastosta(-1)
+        self.assertEqual(var.saldo, 3)
+        self.assertEqual(otto, 0.0)
     def setUp(self):
         self.varasto = Varasto(10)
+    #__str__ testi
+    def test_string(self):
+        var = Varasto(10, 5)
+        oletus = "saldo = 5, vielä tilaa 5"
+        self.assertEqual(str(var), oletus)
 
+
+
+
+
+    #esimerkki testit
     def test_konstruktori_luo_tyhjan_varaston(self):
         # https://docs.python.org/3/library/unittest.html#unittest.TestCase.assertAlmostEqual
         self.assertAlmostEqual(self.varasto.saldo, 0)
